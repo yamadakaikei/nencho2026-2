@@ -999,7 +999,7 @@
           if (!dl) throw { code: 'unavailable' };
           await dl.save({ filename: fname, data: blob });
         } catch (e) {
-          msg.insertAdjacentHTML('beforeend', `<div class="warn">${e && e.code === 'declined' ? '保存がキャンセルされました。もう一度ボタンを押すと保存できます。' : 'この画面（URLで開いた画面）ではPDFを保存できません。会社から配布されたHTMLファイル「年末調整のご案内（令和8年分）従業員配布用.html」をパソコンのEdgeまたはChromeで開くと、PDFで保存できます。下の画像を右クリック（スマホは長押し）で保存して印刷することもできます。'}</div>`);
+          msg.insertAdjacentHTML('beforeend', `<div class="warn">${e && e.code === 'declined' ? '保存がキャンセルされました。もう一度ボタンを押すと保存できます。' : 'この画面ではPDFを保存できません。パソコンのEdgeまたはChromeで <b>https://yamadakaikei.github.io/nencho2026-2/</b> を開くと、PDFで保存できます（会社から配布されたHTMLファイルを開いても保存できます）。下の画像を右クリック（スマホは長押し）で保存して印刷することもできます。'}</div>`);
         }
       } else {
         if (pdfUrl) URL.revokeObjectURL(pdfUrl);
