@@ -223,8 +223,9 @@
     </fieldset>
 
     <fieldset class="fs">
-      <legend>扶養に入れる家族（配偶者以外）</legend>
+      <legend>家族（配偶者以外）</legend>
       <p class="hint" style="margin:0">子・父母・祖父母・孫・兄弟姉妹など、生計を一にしている家族を1人ずつ追加してください。16歳未満の子も入力します。</p>
+      <div class="sp-note" style="margin-top:6px"><b>共働きなどで、配偶者の扶養に入れている子も入力してください。</b>その子の欄で「配偶者など、ほかの人の扶養に入れている」にチェックを付けます。あなたの扶養控除等申告書には書きませんが、23歳未満の子は、<b>あなたの生命保険料控除（上限6万円の特例）や所得金額調整控除</b>の対象になるかの判定に使います。</div>
       <div id="famList"></div>
       <button class="addbtn" id="addFam" type="button">＋ 家族を追加</button>
     </fieldset>
@@ -571,7 +572,7 @@
           <div><label for="f${i}_other">その他の所得</label><input id="f${i}_other" class="money" type="text" inputmode="numeric" placeholder="0"></div>
           <div><label for="f${i}_dis">障害の区分</label><select id="f${i}_dis"><option value="">該当なし</option><option value="1">障害者</option><option value="2">特別障害者</option></select></div>
           <div><label for="f${i}_dtext">障害者手帳の種類・等級</label><input id="f${i}_dtext" type="text" placeholder="例：療育手帳 A"></div>
-          <div><label class="chk"><input id="f${i}_other_fuyo" type="checkbox">配偶者など、ほかの人の扶養に入れる</label></div>
+          <div><label class="chk"><input id="f${i}_other_fuyo" type="checkbox">配偶者など、ほかの人の扶養に入れている（あなたの扶養控除等申告書には書きません）</label></div>
           <div><label class="chk"><input id="f${i}_abroadok" type="checkbox">（国外の場合）留学・障害者・年38万円以上の送金のいずれかに当たる</label></div>
           <div><label class="chk"><input id="f${i}_sonzoku" type="checkbox">（70歳以上の場合）あなたか配偶者の父母・祖父母で、同居している</label></div>
         </div>
@@ -815,11 +816,12 @@
     if (d.sp) document.getElementById('sp_calc').innerHTML = calcLine(d.sp.g, d.sp.kyu, d.sp.nen);
     d.fams.forEach(f => {
       const a = ageAt(f.birth, 2026);
-      document.getElementById(`f${f.i}_calc`).innerHTML = calcLine(f.g, f.kyu, f.nen) + (a !== null ? `　／令和8年12月31日の年齢 ${a}歳` : '');
+      document.getElementById(`f${f.i}_calc`).innerHTML = calcLine(f.g, f.kyu, f.nen) + (a !== null ? `　／令和8年12月31日の年齢 ${a}歳` : '')
+        + (f.otherFuyo ? '　／<b>配偶者などの扶養</b>（あなたの扶養控除等申告書には書きません' + (a !== null && a < 23 && f.g.total <= 620000 ? '。生命保険料控除・所得金額調整控除の判定には使います' : '') + '）' : '');
     });
     if (d.ins.has){
-      const c = insCalc(d.ins, !!u23Fam(d));
-      document.getElementById('ins_calc').innerHTML = `生命保険料控除 <b>${yen2(c.life)}</b>／地震保険料控除 <b>${yen2(c.quake)}</b>／社会保険料控除 <b>${yen2(c.soc)}</b>／小規模企業共済等掛金控除 <b>${yen2(c.small)}</b>`;
+      const u = u23Fam(d), c = insCalc(d.ins, !!u);
+      document.getElementById('ins_calc').innerHTML = `年齢23歳未満の扶養親族：<b>${u ? `有（${esc(u.name || '家族')}さん${u.otherFuyo ? '・配偶者などの扶養' : ''}）` : '無'}</b>${u ? '' : '<br><span class="hint">配偶者の扶養に入れている23歳未満の子がいる場合は、上の「家族」欄に入力してください（上限6万円の特例の対象になります）</span>'}<br>生命保険料控除 <b>${yen2(c.life)}</b>／地震保険料控除 <b>${yen2(c.quake)}</b>／社会保険料控除 <b>${yen2(c.soc)}</b>／小規模企業共済等掛金控除 <b>${yen2(c.small)}</b>`;
     } else document.getElementById('ins_calc').innerHTML = '保険料を入力すると、控除額を自動で計算します';
     document.getElementById('pdfPrev').innerHTML = ''; document.getElementById('pdfMsg').innerHTML = '';
     if (!d.me.name && !d.me.kyu && !d.sp && !d.fams.length){ document.getElementById('makerOut').innerHTML = ''; document.getElementById('pdfBtn').disabled = true; document.getElementById('pdfMsg').innerHTML = '<div class="none">上の「あなた」の欄などに入力すると、作成できるようになります。</div>'; return; }
