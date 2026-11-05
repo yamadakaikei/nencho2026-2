@@ -88,8 +88,17 @@
   .insbox{display:block;min-width:0;max-width:100%}
   .insbox .grid>div{min-width:0}
   .insbox select,.insbox input{width:100%;max-width:100%;min-width:0}
-  .insbox summary{cursor:pointer;color:var(--navy);display:grid;gap:2px}
-  .insbox[open] summary{margin-bottom:6px}
+  .insbox{border:2px solid var(--navy);padding-top:0;overflow:hidden}
+  .insbox:not([open]){padding-bottom:0}
+  .insbox summary{cursor:pointer;list-style:none;display:grid;gap:3px;position:relative;margin:0 -12px;padding:12px 44px 12px 14px;background:var(--navy);color:#fff;box-shadow:inset 0 -3px 0 var(--brass)}
+  .insbox summary::-webkit-details-marker{display:none}
+  .insbox summary::after{content:"＋";position:absolute;right:14px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:var(--brass);color:#fff;display:grid;place-items:center;font-weight:700}
+  .insbox[open] summary::after{content:"－"}
+  .insbox summary:hover{background:var(--navy-dark)}
+  .insbox .ins-tag{justify-self:start;background:var(--brass);color:#fff;font-size:.72rem;font-weight:700;border-radius:4px;padding:1px 8px}
+  .insbox .ins-ttl{font-size:1.08rem}
+  .insbox .ins-sub{font-size:.8rem;color:#DCE3F2;line-height:1.6}
+  .insbox[open] summary{margin-bottom:10px}
   .key-note{background:var(--brass-soft);border:2px solid var(--brass);border-left-width:6px;border-radius:8px;padding:8px 12px;margin-top:8px;font-size:.9rem;line-height:1.7}
   .key-note .tag-imp{display:inline-block;background:var(--ng);color:#fff;font-weight:700;font-size:.75rem;border-radius:4px;padding:0 8px;margin-right:6px;vertical-align:1px}
   .key-note .em{color:var(--ng);font-size:.98rem}
@@ -236,7 +245,7 @@
     </fieldset>
 
     <details class="fs insbox" id="insBox">
-      <summary><b>▶ 保険料を入力する（保険料控除申告書も作る場合）</b><span class="hint">生命保険・地震保険・国民年金・iDeCoなどを<b>ご自身で支払っている方だけ</b>開いて入力してください</span></summary>
+      <summary><span class="ins-tag">保険料控除申告書もPDFで作れます</span><b class="ins-ttl">保険料を入力する</b><span class="ins-sub">生命保険・地震保険・国民年金・iDeCoなどを<b>ご自身で支払っている方</b>は、ここを押して入力してください</span></summary>
       <p class="hint" style="margin:0">金額は、保険会社などから届いた<b>控除証明書に書かれた金額</b>（12月までの見込み額があればその額）を入力します。<b>給与から天引きされている健康保険料・厚生年金保険料・雇用保険料は入力しないでください</b>（会社で計算します）。</p>
       <h4 class="insh">生命保険料（一般の生命保険・介護医療保険・個人年金保険）</h4>
       <div id="lifeList"></div>
