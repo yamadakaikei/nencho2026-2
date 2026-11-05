@@ -90,6 +90,11 @@
   .insbox select,.insbox input{width:100%;max-width:100%;min-width:0}
   .insbox summary{cursor:pointer;color:var(--navy);display:grid;gap:2px}
   .insbox[open] summary{margin-bottom:6px}
+  .key-note{background:var(--brass-soft);border:2px solid var(--brass);border-left-width:6px;border-radius:8px;padding:8px 12px;margin-top:8px;font-size:.9rem;line-height:1.7}
+  .key-note .tag-imp{display:inline-block;background:var(--ng);color:#fff;font-weight:700;font-size:.75rem;border-radius:4px;padding:0 8px;margin-right:6px;vertical-align:1px}
+  .key-note .em{color:var(--ng);font-size:.98rem}
+  .chk.key{background:var(--brass-soft);border:1px solid var(--brass);border-radius:6px;padding:4px 8px;font-weight:700;color:var(--navy)}
+  .em-ng{display:inline-block;margin-top:2px;color:var(--ng);font-weight:700}
   .insh{font-size:.9rem;color:var(--navy);margin:14px 0 2px;border-left:4px solid var(--brass);padding-left:8px}
   .chk{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--ink)!important;font-weight:400!important}
   .chk input{width:auto!important}
@@ -225,7 +230,7 @@
     <fieldset class="fs">
       <legend>家族（配偶者以外）</legend>
       <p class="hint" style="margin:0">子・父母・祖父母・孫・兄弟姉妹など、生計を一にしている家族を1人ずつ追加してください。16歳未満の子も入力します。</p>
-      <div class="sp-note" style="margin-top:6px"><b>共働きなどで、配偶者の扶養に入れている子も入力してください。</b>その子の欄で「配偶者など、ほかの人の扶養に入れている」にチェックを付けます。あなたの扶養控除等申告書には書きませんが、23歳未満の子は、<b>あなたの生命保険料控除（上限6万円の特例）や所得金額調整控除</b>の対象になるかの判定に使います。</div>
+      <div class="key-note"><span class="tag-imp">重要</span><b class="em">共働きなどで、配偶者の扶養に入れている子も入力してください。</b><br>その子の欄で「<b>配偶者など、ほかの人の扶養に入れている</b>」にチェックを付けます。あなたの扶養控除等申告書には書きませんが、23歳未満の子がいると、<b>あなたの生命保険料控除の上限が6万円に上がる</b>ことがあります（所得金額調整控除の判定にも使います）。</div>
       <div id="famList"></div>
       <button class="addbtn" id="addFam" type="button">＋ 家族を追加</button>
     </fieldset>
@@ -572,7 +577,7 @@
           <div><label for="f${i}_other">その他の所得</label><input id="f${i}_other" class="money" type="text" inputmode="numeric" placeholder="0"></div>
           <div><label for="f${i}_dis">障害の区分</label><select id="f${i}_dis"><option value="">該当なし</option><option value="1">障害者</option><option value="2">特別障害者</option></select></div>
           <div><label for="f${i}_dtext">障害者手帳の種類・等級</label><input id="f${i}_dtext" type="text" placeholder="例：療育手帳 A"></div>
-          <div><label class="chk"><input id="f${i}_other_fuyo" type="checkbox">配偶者など、ほかの人の扶養に入れている（あなたの扶養控除等申告書には書きません）</label></div>
+          <div><label class="chk key"><input id="f${i}_other_fuyo" type="checkbox">配偶者など、ほかの人の扶養に入れている（あなたの扶養控除等申告書には書きません）</label></div>
           <div><label class="chk"><input id="f${i}_abroadok" type="checkbox">（国外の場合）留学・障害者・年38万円以上の送金のいずれかに当たる</label></div>
           <div><label class="chk"><input id="f${i}_sonzoku" type="checkbox">（70歳以上の場合）あなたか配偶者の父母・祖父母で、同居している</label></div>
         </div>
@@ -821,7 +826,7 @@
     });
     if (d.ins.has){
       const u = u23Fam(d), c = insCalc(d.ins, !!u);
-      document.getElementById('ins_calc').innerHTML = `年齢23歳未満の扶養親族：<b>${u ? `有（${esc(u.name || '家族')}さん${u.otherFuyo ? '・配偶者などの扶養' : ''}）` : '無'}</b>${u ? '' : '<br><span class="hint">配偶者の扶養に入れている23歳未満の子がいる場合は、上の「家族」欄に入力してください（上限6万円の特例の対象になります）</span>'}<br>生命保険料控除 <b>${yen2(c.life)}</b>／地震保険料控除 <b>${yen2(c.quake)}</b>／社会保険料控除 <b>${yen2(c.soc)}</b>／小規模企業共済等掛金控除 <b>${yen2(c.small)}</b>`;
+      document.getElementById('ins_calc').innerHTML = `年齢23歳未満の扶養親族：<b>${u ? `有（${esc(u.name || '家族')}さん${u.otherFuyo ? '・配偶者などの扶養' : ''}）` : '無'}</b>${u ? '' : '<br><span class="em-ng">⚠ 配偶者の扶養に入れている23歳未満の子がいる場合は、上の「家族」欄に入力してください（生命保険料控除の上限が6万円に上がります）</span>'}<br>生命保険料控除 <b>${yen2(c.life)}</b>／地震保険料控除 <b>${yen2(c.quake)}</b>／社会保険料控除 <b>${yen2(c.soc)}</b>／小規模企業共済等掛金控除 <b>${yen2(c.small)}</b>`;
     } else document.getElementById('ins_calc').innerHTML = '保険料を入力すると、控除額を自動で計算します';
     document.getElementById('pdfPrev').innerHTML = ''; document.getElementById('pdfMsg').innerHTML = '';
     if (!d.me.name && !d.me.kyu && !d.sp && !d.fams.length){ document.getElementById('makerOut').innerHTML = ''; document.getElementById('pdfBtn').disabled = true; document.getElementById('pdfMsg').innerHTML = '<div class="none">上の「あなた」の欄などに入力すると、作成できるようになります。</div>'; return; }
